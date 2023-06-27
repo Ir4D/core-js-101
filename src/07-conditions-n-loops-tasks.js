@@ -361,8 +361,33 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  const brackets = {
+    ']': '[',
+    '}': '{',
+    ')': '(',
+    '>': '<',
+  };
+  const tmp = [];
+  let flag = false;
+  if (str.length === 0) {
+    return true;
+  }
+  const arr = str.split('');
+  tmp.push(arr[0]);
+  for (let i = 1; i < arr.length; i += 1) {
+    if (tmp.length > 0 && tmp.at(-1) === brackets[`${arr[i]}`]) {
+      tmp.pop();
+    } else {
+      tmp.push(arr[i]);
+    }
+  }
+  if (tmp.length === 0) {
+    flag = true;
+  } else {
+    flag = false;
+  }
+  return flag;
 }
 
 
@@ -386,8 +411,8 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return num.toString(n);
 }
 
 
@@ -403,8 +428,36 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const arr = pathes.map((path) => path.split('/'));
+  const len = pathes.length;
+  const res = [];
+  let flag = true;
+  let num = 1;
+  for (let i = 0; i < arr[0].length; i += 1) {
+    for (let j = 1; j < len; j += 1) {
+      num = j;
+      if (flag && arr[j][i] === arr[j - 1][i]) {
+        flag = true;
+      } else {
+        flag = false;
+        if (res.length === 0) {
+          return '';
+        }
+        if (res.length === 1 && res[0] === '') {
+          return '/';
+        }
+        if (res.length < arr[0].length) {
+          return `${res.join('/')}/`;
+        }
+        return res.join('/');
+      }
+    }
+    if (flag) {
+      res.push(arr[num][i]);
+    }
+  }
+  return res.join('/');
 }
 
 
