@@ -23,8 +23,10 @@
  *   getComposition(Math.sin, Math.asin)(x) => Math.sin(Math.asin(x))
  *
  */
-function getComposition(/* f, g */) {
-  throw new Error('Not implemented');
+function getComposition(f, g) {
+  return function newFn(x) {
+    return f(g(x));
+  };
 }
 
 
@@ -44,8 +46,10 @@ function getComposition(/* f, g */) {
  *   power05(16) => 4
  *
  */
-function getPowerFunction(/* exponent */) {
-  throw new Error('Not implemented');
+function getPowerFunction(exponent) {
+  return function newFn(x) {
+    return x ** exponent;
+  };
 }
 
 
@@ -62,8 +66,18 @@ function getPowerFunction(/* exponent */) {
  *   getPolynom(8)     => y = 8
  *   getPolynom()      => null
  */
-function getPolynom() {
-  throw new Error('Not implemented');
+function getPolynom(...coefficients) {
+  if (coefficients.length === 0) {
+    return null;
+  }
+
+  return function newFn(x) {
+    let result = 0;
+    for (let i = 0; i < coefficients.length; i += 1) {
+      result += coefficients[i] * (x ** (coefficients.length - i - 1));
+    }
+    return result;
+  };
 }
 
 
@@ -129,8 +143,20 @@ function retry(/* func, attempts */) {
  * cos(3.141592653589793) ends
  *
  */
-function logger(/* func, logFunc */) {
-  throw new Error('Not implemented');
+function logger(func, logFunc) {
+  // throw new Error('Not implemented');
+  return function newFn(...args) {
+    const argsString = args.map((arg) => JSON.stringify(arg)).join(',');
+    const functionName = func.name || 'anonymous';
+
+    logFunc(`${functionName}(${argsString}) starts`);
+
+    const result = func(...args);
+
+    logFunc(`${functionName}(${argsString}) ends`);
+
+    return result;
+  };
 }
 
 
